@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Flowers City</title>
+    <style>
+        :root { --rosa: #db2777; --fundo: #fdf2f8; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--fundo); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .box { background: white; padding: 40px; border-radius: 30px; box-shadow: 0 15px 30px rgba(0,0,0,0.1); width: 320px; text-align: center; overflow: hidden; }
+        h2 { color: var(--rosa); margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 2px solid #f1f5f9; border-radius: 12px; box-sizing: border-box; outline: none; }
+        .btn-principal { background: #333; color: white; border: none; padding: 14px; width: 100%; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .link-troca { margin-top: 25px; font-size: 13px; color: #64748b; }
+        .link-troca a { color: var(--rosa); text-decoration: none; font-weight: bold; }
+        
+        #tela-loading { display: none; }
+        .progress-container { width: 100%; background: #eee; border-radius: 10px; height: 10px; margin: 20px 0; overflow: hidden; }
+        .progress-bar { width: 0%; height: 100%; background: var(--rosa); transition: width 0.1s linear; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <div id="tela-form">
+        <h2>Login 🌸</h2>
+        <input type="text" id="log-user" placeholder="Usuário ou E-mail">
+        <input type="password" id="log-senha" placeholder="Senha">
+        <button class="btn-principal" onclick="fazerLogin()">Entrar</button>
+        <p class="link-troca">Não tem uma conta? <a href="cadastro.html">Regista-te!</a></p>
+    </div>
+
+    <div id="tela-loading">
+        <h2>Adoramos ter você de volta! 🌸</h2>
+        <p style="font-size: 12px; color: #666;">Carregando seus arquivos...</p>
+        <div class="progress-container">
+            <div class="progress-bar" id="barra"></div>
+        </div>
+        <p id="porcentagem" style="font-weight: bold; color: var(--rosa);">0%</p>
+    </div>
+</div>
+
+<script>
+    const baseFB = "https://cadastro-app-fc-default-rtdb.firebaseio.com/";
+
+    async function fazerLogin() {
+        const u = document.getElementById('log-user').value;
+        const s = document.getElementById('log-senha').value;
+        
+        if(!u || !s) return alert("Preencha os campos!");
+
+        try {
+            const res = await fetch(`${baseFB}cadastros.json`);
+            const usuarios = await res.json();
+            let achou = false;
+
+            for(let id in usuarios) {
+                if((usuarios[id].user === u || usuarios[id].email === u) && usuarios[id].senha === s) {
+                    achou = true;
+                    localStorage.setItem("userName", usuarios[id].user);
+                    localStorage.setItem("logado", "true");
+                    iniciarCarregamento();
+                    break;
+                }
+            }
+
+            if(!achou) alert("Usuário ou senha incorretos!");
+        } catch(e) { alert("Erro de conexão!"); }
+    }
+
+    function iniciarCarregamento() {
+        document.getElementById('tela-form').style.display = 'none';
+        document.getElementById('tela-loading').style.display = 'block';
+        
+        let progresso = 0;
+        const barra = document.getElementById('barra');
+        const txtPorcent = document.getElementById('porcentagem');
+        
+        const intervalo = setInterval(() => {
+            progresso += 4;
+            barra.style.width = progresso + "%";
+            txtPorcent.innerText = progresso + "%";
+
+            if(progresso >= 100) {
+                clearInterval(intervalo);
+                setTimeout(() => {
+                    window.location.href = "home.html";
+                }, 500);
+            }
+        }, 60);
+    }
+</script>
+</body>
+</html>

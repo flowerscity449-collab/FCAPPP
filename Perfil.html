@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - Flowers City</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div style="background: white; padding: 50px 20px; text-align: center; border-bottom: 2px solid #eee;">
+        <div style="width: 80px; height: 80px; background: #3b82f6; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: white; font-size: 30px;">👤</div>
+        <h2 id="pNome">...</h2>
+        <span style="background: #f1f5f9; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold;">
+            ID: #<span id="pID">0000</span>
+        </span>
+    </div>
+
+    <div style="padding: 20px;">
+        <button class="btn" style="background: #f1f5f9; color: #333; width: 100%; margin-bottom: 10px; border: none; padding: 15px; border-radius: 15px; font-weight: bold; cursor: pointer;" onclick="window.location.href='home.html'">Voltar para Home</button>
+        
+        <button class="btn" style="background: #fee2e2; color: #ef4444; width: 100%; border: none; padding: 15px; border-radius: 15px; font-weight: bold; cursor: pointer;" onclick="sairDaConta()">Sair da Conta</button>
+    </div>
+
+    <nav class="nav">
+        <a href="home.html" class="nav-item">Home</a>
+        <a href="bott.html" class="nav-item">Conversa</a>
+        <a href="comu.html" class="nav-item">Comu</a>
+    </nav>
+
+    <script>
+        const nomeUsuario = localStorage.getItem("userName") || "Cidadão";
+        document.getElementById('pNome').innerText = nomeUsuario;
+
+        function gerenciarID() {
+            let idExistente = localStorage.getItem("userID");
+            if (!idExistente) {
+                const novoID = Math.floor(Date.now() / 1000).toString().slice(-5);
+                localStorage.setItem("userID", novoID);
+                idExistente = novoID;
+            }
+            document.getElementById('pID').innerText = idExistente;
+        }
+
+        // Função de saída atualizada para cadastro.html
+        function sairDaConta() {
+            if(confirm("Tem certeza que deseja sair?")) {
+                localStorage.removeItem("userName");
+                localStorage.removeItem("userID");
+                // Redireciona para a página de cadastro
+                window.location.href = 'cadastro.html';
+            }
+        }
+        
+        gerenciarID();
+    </script>
+</body>
+</html>

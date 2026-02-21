@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Flowers City</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .grid-home { display: grid; grid-template-columns: 1fr; gap: 15px; padding: 20px; }
+        .btn-card {
+            background: white; display: flex; align-items: center; gap: 20px; padding: 20px;
+            border-radius: 20px; text-decoration: none; color: #1f2937;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s; border: 1px solid #f1f5f9;
+        }
+        .btn-card:active { transform: scale(0.97); }
+        .icon-box { width: 50px; height: 50px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+    </style>
+</head>
+<body style="background-color: #f8fafc; margin: 0; padding-bottom: 80px;">
+
+    <div style="background: linear-gradient(135deg, #f43f5e, #fb7185); padding: 50px 20px; color: white; text-align: center; border-radius: 0 0 40px 40px; box-shadow: 0 4px 20px rgba(244, 63, 94, 0.2);">
+        <h1 id="userGreeting" style="margin: 0; font-size: 28px;">Olá!</h1>
+        <p style="opacity: 0.9; margin-top: 5px;">Bem-vindo à Flowers City 🌸</p>
+    </div>
+
+    <div class="grid-home">
+        <a href="https://www.roblox.com/share?code=567e087a43539846abf5c531781f0f59&type=Server" class="btn-card">
+            <div class="icon-box" style="background: #dcfce7; color: #16a34a;">🎮</div>
+            <div><strong>SERVIDOR</strong><br><span style="font-size: 12px; color: #64748b;">Entrar na City agora</span></div>
+        </a>
+
+        <a href="bott.html" class="btn-card">
+            <div class="icon-box" style="background: #fef2f2; color: #ef4444;">💬</div>
+            <div><strong>GRUPO COMUNITÁRIO</strong><br><span style="font-size: 12px; color: #64748b;">Converse com os moradores</span></div>
+        </a>
+
+        <a href="comu.html" class="btn-card">
+            <div class="icon-box" style="background: #e0e7ff; color: #4f46e5;">🌎</div>
+            <div><strong>COMUNIDADE</strong><br><span style="font-size: 12px; color: #64748b;">Veja fotos e postagens</span></div>
+        </a>
+    </div>
+
+    <nav class="nav">
+        <a href="bott.html" class="nav-item">Conversa</a>
+        <a href="comu.html" class="nav-item">Comu</a>
+        <a href="perfil.html" class="nav-item">Perfil</a>
+    </nav>
+
+    <div style="text-align: center; padding: 10px;">
+        <button onclick="window.location.href='config.html'" style="background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 14px;">⚙️ Configurações do App</button>
+    </div>
+
+    <script>
+        const nomeSalvo = localStorage.getItem("userName") || "Cidadão";
+        document.getElementById("userGreeting").innerText = `Olá, ${nomeSalvo}!`;
+    </script>
+</body>
+</html>

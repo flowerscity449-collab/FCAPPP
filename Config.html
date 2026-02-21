@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações - Flowers City</title>
+    <style>
+        :root { --rosa: #f43f5e; --fundo: #fdf2f8; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--fundo); margin: 0; padding: 20px; padding-bottom: 80px; overflow-x: hidden; }
+        
+        .config-card { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        .section-title { color: var(--rosa); font-weight: bold; margin-bottom: 10px; display: block; font-size: 14px; }
+        .item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; cursor: pointer; }
+        .item:last-child { border: 0; }
+        
+        input[type="checkbox"] { accent-color: var(--rosa); width: 18px; height: 18px; }
+
+        .version-container { margin-top: 10px; padding: 10px; text-align: left; }
+        .version-text { font-size: 14px; color: #bbb; user-select: none; font-weight: bold; }
+        
+        .nav-footer { position: fixed; bottom: 0; left: 0; width: 100%; display: flex; justify-content: space-around; background: white; padding: 15px 0; border-top: 1px solid #eee; box-shadow: 0 -2px 10px rgba(0,0,0,0.02); }
+        .nav-footer a { text-decoration: none; color: var(--rosa); font-weight: bold; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <h2 style="color: var(--rosa); margin-bottom: 25px;">Configurações ⚙️</h2>
+
+    <div class="config-card">
+        <span class="section-title">PREFERÊNCIAS</span>
+        <div class="item"><span>Notificações</span> <input type="checkbox" checked></div>
+        <div class="item"><span>Modo Escuro</span> <input type="checkbox" id="darkModeBtn"></div>
+    </div>
+
+    <div class="config-card">
+        <span class="section-title">📜 INFORMAÇÕES</span>
+        <div class="item" onclick="alert('Flowers City: Uma comunidade vibrante feita para você!')"><span>Sobre a Flowers City</span> ➜</div>
+        
+        <!-- Links conectados aos arquivos criados -->
+        <div class="item" onclick="window.location.href='termos.html'"><span>Termos de uso</span> ➜</div>
+        <div class="item" onclick="window.location.href='privacidade.html'"><span>Política de privacidade</span> ➜</div>
+    </div>
+
+    <div class="config-card" style="border: 1px solid #fee2e2;">
+        <span class="section-title" style="color: #ef4444;">CONTA</span>
+        <div class="item" onclick="fazerLogout()">
+            <span style="color: #ef4444; font-weight: bold;">Sair da Conta</span>
+            <span style="color: #ef4444;">Logout</span>
+        </div>
+    </div>
+
+    <div class="version-container">
+        <span class="version-text" onclick="msgBeta()">Versão Beta 1.0.0</span>
+    </div>
+
+    <nav class="nav-footer">
+        <a href="home.html">Voltar para Home</a>
+    </nav>
+
+    <script>
+        function msgBeta() {
+            alert("Flowers City está em fase de Beta Test. Novas funções em breve!");
+        }
+
+        function fazerLogout() {
+            if(confirm("Deseja realmente sair e deslogar desta conta?")) {
+                localStorage.removeItem("logado");
+                localStorage.removeItem("userName");
+                window.location.href = "login.html";
+            }
+        }
+
+        const darkCheck = document.getElementById('darkModeBtn');
+        darkCheck.addEventListener('change', () => {
+            if(darkCheck.checked) {
+                alert("Modo escuro em desenvolvimento para a próxima atualização!");
+                darkCheck.checked = false;
+            }
+        });
+    </script>
+</body>
+</html>
+

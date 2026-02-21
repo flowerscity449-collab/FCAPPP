@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comunidade - Flowers City</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { background: #f0f2f5; padding-bottom: 80px; margin: 0; }
+        .header-comu { background: white; padding: 15px; text-align: center; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 100; }
+        
+        .postar-box { background: white; margin: 15px; padding: 15px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        textarea { width: 100%; border: none; outline: none; resize: none; font-family: inherit; font-size: 16px; min-height: 80px; }
+        
+        .label-foto { display: inline-block; background: #f0f2f5; padding: 8px 15px; border-radius: 20px; font-size: 14px; cursor: pointer; margin-top: 10px; font-weight: bold; color: #4b5563; }
+        .btn-enviar { background: #f43f5e; color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; float: right; margin-top: 10px; cursor: pointer; }
+        
+        .feed { padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+        .post-card { background: white; padding: 15px; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .post-autor { font-weight: bold; color: #f43f5e; margin-bottom: 8px; display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="header-comu">
+        <h2 style="margin:0; font-size: 18px;">Comunidade 🌸</h2>
+    </div>
+
+    <div class="postar-box">
+        <textarea id="textoPost" placeholder="O que está acontecendo na City?"></textarea>
+        
+        <label for="inputImagem" class="label-foto">📷 Adicionar Foto</label>
+        <input type="file" id="inputImagem" accept="image/*" onchange="previsualizarImagem()" style="display:none">
+        
+        <img id="previewFoto" style="width:100%; border-radius:10px; display:none; margin-top:10px; object-fit: cover; max-height: 250px;">
+        
+        <button id="btnPublicar" onclick="publicarPost()" class="btn-enviar">Publicar</button>
+        <div style="clear:both;"></div>
+    </div>
+
+    <div id="feedConteudo" class="feed">
+        <p style="text-align:center; color: gray;">Carregando novidades...</p>
+    </div>
+
+    <nav class="nav">
+        <a href="home.html" class="nav-item">Home</a>
+        <a href="bott.html" class="nav-item">Conversa</a>
+        <a href="perfil.html" class="nav-item">Perfil</a>
+    </nav>
+
+    <script>
+        const FB_POSTS = "https://botfcsuport-default-rtdb.firebaseio.com/posts.json";
+        const autor = localStorage.getItem("userName") || "Cidadão";
+
+        function previsualizarImagem() {
+            const file = document.getElementById('inputImagem').files[0];
+            const preview = document.getElementById('previewFoto');
+            const reader = new FileReader();
+
+            reader.onloadend = function() {
+                preview.src = reader.result;
+                preview.style.display = "block";
+            }
+            if (file) reader.readAsDataURL(file);
+        }
+
+        async function publicarPost() {
+            const texto = document.getElementById('textoPost').value;
+            const previewImg = document.getElementById('previewFoto');
+            const btn = document.getElementById('btnPublicar');
+
+            if(!texto.trim() && previewImg.style.display === "none") return;
+
+            btn.disabled = true;
+            btn.innerText = "Postando...";
+
+            const novoPost = {
+                autor: autor,
+                texto: texto,
+                foto: previewImg.style.display === "block" ? previewImg.src : null,
+                data: new Date().toLocaleString()
+            };
+
+            try {
+                await fetch(FB_POSTS, { method: "POST", body: JSON.stringify(novoPost) });
+                location.reload(); 
+            } catch (error) {
+                alert("Erro ao publicar!");
+                btn.disabled = false;
+                btn.innerText = "Publicar";
+            }
+        }
+
+        async function carregarPosts() {
+            try {
+                const res = await fetch(FB_POSTS);
+                const data = await res.json();
+                const feed = document.getElementById('feedConteudo');
+                feed.innerHTML = "";
+
+                if(!data) {
+                    feed.innerHTML = "<p style='text-align:center;'>Nenhum post ainda. Seja o primeiro!</p>";
+                    return;
+                }
+
+                Object.keys(data).reverse().forEach(id => {
+                    const post = data[id];
+                    const card = document.createElement('div');
+                    card.className = "post-card";
+                    
+                    let imgHtml = post.foto ? `<img src="${post.foto}" style="width:100%; border-radius:10px; margin-top:10px;">` : "";
+                    
+                    card.innerHTML = `
+                        <span class="post-autor">@${post.autor}</span>
+                        <div style="font-size: 15px; color: #374151;">${post.texto}</div>
+                        ${imgHtml}
+                        <div style="font-size: 10px; color: #9ca3af; margin-top:10px;">${post.data}</div>
+                    `;
+                    feed.appendChild(card);
+                });
+            } catch (error) {
+                console.error("Erro ao carregar posts:", error);
+            }
+        }
+
+        carregarPosts();
+    </script>
+</body>
+</html>
